@@ -35,8 +35,20 @@ def edit_document(
         raise ValueError(f"String '{old_string}' not found in document with id {doc_id}.")
     docs[doc_id] = docs[doc_id].replace(old_string, new_string)
  
-# TODO: Write a resource to return all doc id's
-# TODO: Write a resource to return the contents of a particular doc
+# Write a resource to return all doc id's
+@mcp.resource(
+        uri="docs://documents", 
+        mime_type="application/json")
+def list_docs() -> list[str]:
+    return list(docs.keys())
+
+#  Write a resource to return the contents of a particular doc
+@mcp.resource(
+        uri="docs://documents/{doc_id}", 
+        mime_type="text/plain")
+def fetch_doc(doc_id: str) -> str:
+    return read_doc(doc_id)  # Reuse the read_doc tool to check if the doc exists and raise an error if it doesn't
+
 # TODO: Write a prompt to rewrite a doc in markdown format
 # TODO: Write a prompt to summarize a doc
 
